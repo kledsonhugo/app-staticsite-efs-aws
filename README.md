@@ -1,4 +1,4 @@
-# Atividade de armazenamento AWS EFS (File System compartilhado) #
+Armazenamento AWS EFS (File System compartilhado) #
 
 Amazon Elastic File System (Amazon EFS) é um serviço que fornece um sistema de arquivos elástico simples e sem servidor.
 
@@ -10,7 +10,7 @@ Várias instâncias de computação em nuvem, incluindo Amazon EC2, Amazon ECS e
 
 Com o Amazon EFS, você paga apenas pelo armazenamento usado pelo sistema de arquivos e não há taxa mínima nem custo de configuração.
 
-O objetivo desta atividade é explorar na prática os conceitos deste serviço.
+O objetivo é explorar na prática os conceitos deste serviço.
 
 > A execução requer conhecimento prévio sobre a infraestrutura global da AWS (Regiões e Zonas de Disponibilidade), além de caracteríticas básicas dos serviços AWS Virtual Private Cloud (VPC) e AWS Elastic Compute Cloud (EC2).
 
