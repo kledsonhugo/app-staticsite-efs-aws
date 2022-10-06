@@ -20,7 +20,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 Arquitetura base para esta atividade ([sharefs.drawio](https://github.com/FIAP/vds/blob/master/aws/efs/sharefs/sharefs.drawio))
 
-![arquitetura base](/aws/efs/sharefs/images/shareefs.png)
+![arquitetura base](/images/shareefs.png)
 
 ## Passo 1
 
