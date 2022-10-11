@@ -1,3 +1,3 @@
-output "efs_id" {
-  value = aws_efs_file_system.efs.id
+output "lb_dns_name" {
+  value = aws_lb.lb.dns_name
 }
