@@ -94,7 +94,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
         - Tipo de origem: **Qualquer lugar**<br/><br/>
 
     - **Detalhes avançados**
-      - Dados do usuário
+      - Dados do usuário<br/><br/>
         > Substitua no código abaixo **$EFS-ID** pelo id do sistema de arquivos capturado anteriormente.
         ```
         #!/bin/bash
