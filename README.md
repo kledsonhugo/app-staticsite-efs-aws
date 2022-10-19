@@ -1,4 +1,4 @@
-# Armazenamento AWS EFS (File System compartilhado) #
+# Static WebSite hosted on AWS EFS
 
 Amazon Elastic File System (Amazon EFS) é um serviço que fornece um sistema de arquivos elástico simples e sem servidor.
 
