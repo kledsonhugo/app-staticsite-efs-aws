@@ -66,7 +66,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 08. Na tela **Revisar e criar** clique em **Criar**.
 
-09. Após a criação deverá aparecer a mensagem **Êxito! O sistema de arquivos com id fs-*xxxxxxxx*** está disponível** conforme exemplo da figura.
+09. Após a criação deverá aparecer a mensagem **Êxito! O sistema de arquivos com id fs-*xxxxxxxx* está disponível** conforme exemplo da figura.
 
     > Capture o id do sistema de arquivos pois será utilizado adiante.
 
