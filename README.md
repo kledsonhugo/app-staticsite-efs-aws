@@ -200,7 +200,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     ![Visualizar ELB](/images/visualizar_aplicação.png)
 
-### Teste Balanceador de Carga
+### Testar Balanceador de Carga
 
 01. Abra uma outra guia do navegador e acesse a url capturada no passo anterior porém incluindo **/phpinfo.php** na url conforme exemplo da figura.
 
