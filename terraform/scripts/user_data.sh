@@ -1,6 +1,7 @@
 #!/bin/bash
 yum update -y
-yum install -y amazon-efs-utils
+amazon-linux-extras install -y php7.2 epel
+yum install -y amazon-efs-utils httpd telnet tree git
 wget https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py
 /usr/bin/python3 /tmp/get-pip.py
 /usr/local/bin/pip3 install botocore
@@ -14,13 +15,12 @@ while (( $x > 0 )); do
   echo $((x--))
   sleep 10
 done
-
-yum install -y httpd git
 systemctl enable httpd
 cd /tmp
 git clone https://github.com/kledsonhugo/app-static-site-efs
 mkdir /mnt/efs/html
 cp /tmp/app-static-site-efs/app/*.html /mnt/efs/html
+cp /tmp/app-static-site-efs/app/phpinfo.php /mnt/efs/html
 rm -rf /var/www/html/
 ln -s /mnt/efs/html/ /var/www/html
 service httpd restart
