@@ -12,143 +12,101 @@ Com o Amazon EFS, você paga apenas pelo armazenamento usado pelo sistema de arq
 
 O objetivo é explorar na prática os conceitos deste serviço.
 
-> A execução requer conhecimento prévio sobre a infraestrutura global da AWS (Regiões e Zonas de Disponibilidade), além de caracteríticas básicas dos serviços AWS Virtual Private Cloud (VPC) e AWS Elastic Compute Cloud (EC2).
+  > A execução requer conhecimento prévio sobre a infraestrutura global da AWS (Regiões e Zonas de Disponibilidade), além de caracteríticas básicas dos serviços AWS Virtual Private Cloud (VPC) e AWS Elastic Compute Cloud (EC2).
 
-> As opções utilizadas consideram ambiente exclusivamente para experimentação. Ambientes corporativos produtivos devem levar em consideração outros aspectos não contemplados, como segurança, capacidade, alta disponibilidade e *observability*.
+  > As opções utilizadas consideram ambiente exclusivamente para experimentação. Ambientes corporativos produtivos devem levar em consideração outros aspectos não contemplados, como segurança, capacidade, alta disponibilidade e *observability*.
 
-> Referência: [https://docs.aws.amazon.com/pt_br/efs/latest/ug/whatisefs.html](https://docs.aws.amazon.com/pt_br/efs/latest/ug/whatisefs.html)
+  > Referência: [https://docs.aws.amazon.com/pt_br/efs/latest/ug/whatisefs.html](https://docs.aws.amazon.com/pt_br/efs/latest/ug/whatisefs.html)
 
-Arquitetura base para esta atividade ([sharefs.drawio](https://github.com/FIAP/vds/blob/master/aws/efs/sharefs/sharefs.drawio))
+<br/><br/>
+## Arquitetura de referência
 
-![arquitetura base](/images/shareefs.png)
+![arquitetura base](/images/app-static-site-efs.png)
 
-## Passo 1
+<br/><br/>
+## Passo-a-passo<br/><br/>
 
-O primeiro passo é criar o sistema de arquivos.
+### Criar VPC
 
-1. Faça login no AWS Console.
+01. Faça login no AWS Console.
 
-2. Em **Serviços** selecione **EFS**.
+02. Em **Serviços** selecione **VPC**.
 
-3. Selecione o botão **Criar sistema de arquivos** e preencha com as informações abaixo.
+03. Selecione o botão **Criar VPC** e preencha com as informações abaixo.
 
-   - Nome: `sharefs`
-   - Virtual Private Cloud: Selecione uma VPC de preferência
-   - Disponibilidade e durabilidade: `One Zone`
-   - Zona de disponibilidade: Selecione uma zona de disponibilidade de preferência
+    - Recursos a serem criados     : **VPC e muito mais**
+    - Gerar automaticamente        : **efs**
+    - Número de sub-redes privadas : **0**
+    - Endpoints da VPC             : **Nenhuma**<br/><br/>
 
-     > Guarde a informação **VPC** pois será necessária adiante.
-     > Mantenha as demais opções padrões.
+04. Clicar em **Criar VPC** e observar recursos criados conforme exemplo da figura.
 
-4. Clique em **Personalizar** e preencha com as informações abaixo.
+    ![Criar VPC](/images/criar_vpc.png)<br/><br/>
 
-   - Backups automáticos: Desmarque a opção **Habilitar backups automáticos**
-   - Gerenciamento de ciclo de vida: `Nenhum`
-   - Criptografia: Desmarque a opção **Habilite a criptografia de dados em repouso**
+### Criar sistema de arquivos EFS
 
-     > Mantenha as demais opções padrões.
+01. Em **Serviços** selecione **EFS**.
 
-5. Clique em **Próximo**.
+02. Selecione o botão **Criar sistema de arquivos** e preencha com as informações abaixo.
 
-6. Na tela **Acesso à rede** clique em **Próximo**.
+    - Nome                    : **efs**
+    - Virtual Private Cloud   : **efs-vpc**<br/><br/>
 
-7. Na tela **Política do sistema de arquivos - opcional** clique em **Próximo**.
+03. Clique em **Personalizar** e preencha com as informações abaixo.
 
-8. Na tela **Revisar e criar** clique em **Criar**.
+    - Habilitar backups automáticos               : Desmarcar
+    - Transição para IA                           : **Nenhum**
+    - Habilite a criptografia de dados em repouso : Desmarcar<br/><br/>
 
-9. Após a criação deverá aparecer a mensagem **Êxito! O sistema de arquivos (fs-xxxxxxxx) está disponível**.
+05. Clique em **Próximo**.
 
-10. No quadro **Sistemas de arquivos** clique sobre o nome do sistema de arquivos.
+06. Na tela **Acesso à rede** clique em **Próximo**.
+
+07. Na tela **Política do sistema de arquivos - opcional** clique em **Próximo**.
+
+08. Na tela **Revisar e criar** clique em **Criar**.
+
+09. Após a criação deverá aparecer a mensagem **Êxito! O sistema de arquivos (fs-xxxxxxxx) está disponível** conforme exemplo da figura.
+
+    ![Criar EFS](/images/criar_efs.png)
+
+10. No quadro **Sistemas de arquivos** clique sobre o nome do sistema de arquivos **efs**.
 
 11. Na aba **Rede** capture os campos **ID da sub-rede** e **Endereço IP** pois serão utilizados adiante.
 
+    ![Criar EFS](/images/visualizar_efs.png)<br/><br/>
 
-## Passo 2
+### Criar instâncias EC2
 
-Inicie instâncias EC2.
+01. Em **Serviços** selecione **EC2**.
 
-1. Em **Serviços** selecione **EC2**.
+02. Clique em **Executar instância** e preencha com as informações abaixo.
 
-2. Clique em **Executar instância**.
+    - Nome : **efs-public1**
 
-3. Na tela **Etapa 1: Selecione uma Imagem de máquina da Amazon (AMI)** selecione a opção **Amazon Linux 2 AMI** e clique em **Selecionar**.
+    - Par de chaves (login)
+      - Nome do par de chaves : **vockey** (ou outra de sua preferência)
 
-   > Mantenha as demais opções padrões.
+    - Configurações de rede**
+      - VPC                                     : **efs-vpc**
+      - Sub-rede                                : **efs-subnet-public1-us-east-1a**
+      - Atribuir IP público automaticamente     : **Habilitar**
+      - Selecionar grupo de segurança existente : Selecionado
+      - Grupos de segurança comuns              : **default**<br/><br/>
 
-4. Na tela **Etapa 2: Escolha um tipo de instância** selecione a opção **t2.micro** e clique em **Próximo**.
+    - Detalhes avançados
+      - AAA
 
-5. Na tela **Etapa 3: Configure os detalhes da instância** preencha com as informações abaixo e clicar em **Próximo: Adicionar armazenamento**.
+    - Resumo
+      - Número de instâncias : **2**
 
-   - Número de instâncias: `2`
-   - Rede: Selecione a VPC utilizada no passo anterior
-   - Sub-rede: Selecione o ID da Sub-rede utilizada no passo anterior
-   - Dados do usuário: Copie e cole o conteúdo abaixo
-     ```
-     sudo yum -y update 
-     sudo yum -y install nfs-utils
-     ```
+03. Clique em **Criar instância**.
 
-     > Mantenha as demais opções padrões.
+04. Clique em **Visualizar todas as instâncias**.
 
-6. Na tela **Etapa 4: Adicionar armazenamento** clique em **Próximo: Adicionar Tags**.
+12. Aguarde um tempo até que as instâncias fiquem com as infos abaixo.
 
-7. Na tela **Etapa 5: Adicionar Tags** clique em **Próximo: Configure o security group**.
-
-8. Na tela **Etapa 6: Configure o security group** selecione um **Grupo de Segurança** que contenha a regra abaixo e clique em **Verificar e ativar**.
-
-   - Type: `All traffic`
-   - Protocol: `All`
-   - Port Range: `All`
-   - Source: `0.0.0.0/0`
-
-9. Na tela **Etapa 7: Review Instance Launch** clicar em **Executar**.
-
-10. Na tela **Selecione um par de chaves ...** selecione um par de chaves existe ou crie um novo par de chaves e clique em **Executar**.
-
-    > Guarde a chave pois será necessária adiante.
-
-11. Na tela **Launch Status** clique em **Exibir instâncias**.
-
-12. Aguarde um tempo até que as instâncias fiquem com as infos abaixo. Clique no botão **Refresh** para atualizar as infos.
+    > Clique no botão **Refresh** para atualizar as infos
 
     - Estado da instância: `Executando`
-    - Verificação de status: `2/2 verificações aprovadas`
-
-      > Guarde a informação **DNS IPv4 público** de cada instância pois serão necessárias adiante.
-
-
-## Passo 3
-
-Configure as instâncias para utilizarem de forma compartilhada o sistema de arquivos criado no primeiro passo.
-
-1. Abra um terminal ssh e conecte nas instâncias EC2.
-
-   > Na figura abaixo com [MobaXterm](https://mobaxterm.mobatek.net/download-home-edition.html), os seguintes campos foram preenhidos
-
-     - Remote host: **DNS IPv4 público**
-     - Specify username: `ec2-user`
-     - Use private key: arquivo com a chave utilizada durante criação da instância
-
-     ![terminal ssh](/images/ssh-connect.png)
-
-2. Realize a montagem do sistema de arquivos com os comandos abaixo nas duas instâncias.
-
-   > Substitua `{Endereço IP}` pelo valor capturado no primeiro passo dessa atividade.
-   ```
-   sudo -i
-   mkdir /opt/sharefs
-   mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport {Endereço IP}:/ /opt/sharefs
-   ```
-
-3. Crie um arquivo na primeira instância e verifique na outra instãncia se o arquivo existe.
-
-   Na primeira instância
-   ```
-   touch /opt/sharefs/file_a
-   ls -la /opt/sharefs/
-   ```
-
-   Na segunda instância
-   ```
-   ls -la /opt/sharefs/
-   ```
+    - Verificação de status: `2/2 verificações aprovadas`<br/><br/>
