@@ -144,7 +144,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     - **Configurações de rede**
       - Sub-rede : **efs-subnet-public2-us-east-1b**
-        > Pode ser que não seja **efs-subnet-public2-us-east-*1b***, dependendo de qual zona de disponibilidade a sub-rede foi criada. Porém nesse ponto não pode ser a mesma sub-rede usada para criar as primeiras 2 instâncias EC2. Veja a arquitetura de referência em caso de dúvidas.
+        > Pode ser que não seja **efs-subnet-public2-us-east-*1b***, dependendo de qual zona de disponibilidade a sub-rede foi criada. Porém nesse ponto não pode ser a mesma sub-rede usada para criar as primeiras 2 instâncias EC2. Veja a [Arquitetura de Referência](/images/visualizar_instancias.png) em caso de dúvidas.
       
       - **Selecionar grupo de segurança existente**
         - Grupos de segurança comuns : **efs-sg**<br/><br/>
