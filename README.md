@@ -30,7 +30,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 01. Faça login no AWS Console.
 
-02. Em **Serviços** selecione **VPC**.
+02. Em **Serviços** digite **VPC** e selecione o serviço.
 
 03. Selecione o botão **Criar VPC** e preencha com as informações abaixo.
 
@@ -45,7 +45,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 ### Criar sistema de arquivos EFS
 
-01. Em **Serviços** selecione **EFS**.
+01. Em **Serviços** digite **EFS** e selecione o serviço.
 
 02. Selecione o botão **Criar sistema de arquivos** e preencha com as informações abaixo.
 
@@ -62,51 +62,156 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 06. Na tela **Acesso à rede** clique em **Próximo**.
 
-07. Na tela **Política do sistema de arquivos - opcional** clique em **Próximo**.
+07. Na tela **Política do sistema de arquivos** clique em **Próximo**.
 
 08. Na tela **Revisar e criar** clique em **Criar**.
 
-09. Após a criação deverá aparecer a mensagem **Êxito! O sistema de arquivos (fs-xxxxxxxx) está disponível** conforme exemplo da figura.
+09. Após a criação deverá aparecer a mensagem **Êxito! O sistema de arquivos com id fs-*xxxxxxxx*** está disponível** conforme exemplo da figura.
 
-    ![Criar EFS](/images/criar_efs.png)
+    > Capture o id do sistema de arquivos pois será utilizado adiante.
 
-10. No quadro **Sistemas de arquivos** clique sobre o nome do sistema de arquivos **efs**.
-
-11. Na aba **Rede** capture os campos **ID da sub-rede** e **Endereço IP** pois serão utilizados adiante.
-
-    ![Criar EFS](/images/visualizar_efs.png)<br/><br/>
+    ![Criar EFS](/images/criar_efs.png)<br/><br/>
 
 ### Criar instâncias EC2
 
-01. Em **Serviços** selecione **EC2**.
+01. Em **Serviços** digite **EC2** e selecione o serviço.
 
 02. Clique em **Executar instância** e preencha com as informações abaixo.
 
     - Nome : **efs-public1**
 
-    - Par de chaves (login)
+    - **Par de chaves (login)**
       - Nome do par de chaves : **vockey** (ou outra de sua preferência)
 
-    - Configurações de rede**
-      - VPC                                     : **efs-vpc**
-      - Sub-rede                                : **efs-subnet-public1-us-east-1a**
-      - Atribuir IP público automaticamente     : **Habilitar**
-      - Selecionar grupo de segurança existente : Selecionado
-      - Grupos de segurança comuns              : **default**<br/><br/>
+    - **Configurações de rede**
+      - VPC                                 : **efs-vpc**
+      - Sub-rede                            : **efs-subnet-public1-us-east-1a**
+      - Atribuir IP público automaticamente : **Habilitar**
+      - Nome do grupo de segurança          : **efs-sg**
+      
+      - **Adicionar regra de grupo de segurança**
+        - Tipo : **HTTP**
+        - Tipo de origem: **Qualquer lugar**<br/><br/>
 
-    - Detalhes avançados
-      - AAA
+    - **Detalhes avançados**
+      - Dados do usuário
+        > Substitua no código abaixo **$EFS-ID** pelo id do sistema de arquivos capturado anteriormente.
+        ```
+        #!/bin/bash
+        yum update -y
+        amazon-linux-extras install -y php7.2 epel
+        yum install -y amazon-efs-utils httpd telnet tree git
+        wget https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py
+        /usr/bin/python3 /tmp/get-pip.py
+        /usr/local/bin/pip3 install botocore
+        mkdir /mnt/efs
+        echo "$EFS-ID:/ /mnt/efs efs _netdev,noresvport,tls 0 0" >> /etc/fstab
+        x=9
+        while (( $x > 0 )); do
+          mount -fav
+          mnt=`df -h |grep /mnt/efs |wc -l`
+          if (( $mnt >= 1 )); then break; fi
+          echo $((x--))
+          sleep 10
+        done
+        systemctl enable httpd
+        cd /tmp
+        git clone https://github.com/kledsonhugo/app-static-site-efs
+        mkdir /mnt/efs/html
+        cp /tmp/app-static-site-efs/app/*.html /mnt/efs/html
+        cp /tmp/app-static-site-efs/app/phpinfo.php /mnt/efs/html
+        rm -rf /var/www/html/
+        ln -s /mnt/efs/html/ /var/www/html
+        service httpd restart
+        ```
 
-    - Resumo
-      - Número de instâncias : **2**
+    - **Resumo**
+      - Número de instâncias : **2**<br/><br/>
 
-03. Clique em **Criar instância**.
+03. Clique em **Executar instância**.
 
 04. Clique em **Visualizar todas as instâncias**.
 
-12. Aguarde um tempo até que as instâncias fiquem com as infos abaixo.
+05. Aguarde até que as instâncias fiquem com o status **2/2 verificações aprovadas** conforme exemplo da figura.
 
-    > Clique no botão **Refresh** para atualizar as infos
+    > Clique no botão **Refresh** para atualizar o status
 
-    - Estado da instância: `Executando`
-    - Verificação de status: `2/2 verificações aprovadas`<br/><br/>
+    ![Visualizar Instancias](/images/visualizar_instancias.png)
+    
+06. Repita os passos 01-05 apenas alterando com as informações abaixo.
+
+    - Nome : **efs-public2**
+
+    - **Configurações de rede**
+      - Sub-rede : **efs-subnet-public2-us-east-1b**
+        > Pode ser que não seja **efs-subnet-public2-us-east-*1b***, dependendo de qual zona de disponibilidade a sub-rede foi criada. Porém nesse ponto não pode ser a mesma sub-rede usada para criar as primeiras 2 instâncias EC2. Veja a arquitetura de referência em caso de dúvidas.
+      
+      - **Selecionar grupo de segurança existente**
+        - Grupos de segurança comuns : **efs-sg**<br/><br/>
+
+### Criar Balanceador de Carga
+
+01. Em **Serviços** digite **EC2** e selecione o serviço.
+
+02. No menu lateral esquerdo clique em **Grupos de destino**.
+
+03. Clique em **Criar grupo de destino** e preencha com as informações abaixo.
+
+    - Nome do grupo de destino : **efs-elb-target-group**
+    - VPC                      : **efs-vpc**<br/><br/>
+
+04. Clique em **Próximo**.
+
+05. Selecione todas as instâncias iniciando com **efs-publc** e clique em **Incluir como pendente abaixo** conforme exemplo da figura.
+
+    ![Visualizar instâncias target](/images/visualizar_instancias_target.png)
+
+    ![Visualizar instâncias target 2](/images/visualizar_instancias_target2.png)
+
+06. Clique em **Criar grupo de destino**.
+
+07. No menu lateral esquerdo clique em **Load Balancers**.
+
+08. Clique em **Criar Load Balancer**.
+
+09. Clique em **Criar** para a opção **Application Load Balancer** e preencha com as informações abaixo.
+
+    - Nome        : **efs-elb**
+    - VPC         : **efs-vpc**
+    - Mapeamentos : **us-east-1a** e **us-east-1b**
+      > A segunda Zona de Disponibilidade pode não ser **us-east-1b**, dependendo de qual Zona de Disponibilidade as sub-redes foram criadas.
+    - Grupos de segurança : **efs-sg**
+      > Desmarque qualquer outro Grupo de Segurança
+    - Ação padrão : Avançar para **efs-elb-target-group**<br/><br/>
+
+10. Clique em **Criar Load Balancer**.
+
+11. Clique em **Ver balanceador de carga**.
+
+12. Aguarde até que o balanceador de carga fique com o estado **Ativo** conforme exemplo da figura.
+
+    > Clique no botão **Refresh** para atualizar o estado
+
+    ![Visualizar ELB](/images/visualizar_elb.png)
+
+13. Capturar a url do campo **Nome do DNS**.
+
+14. Abrir uma outra guia do navegador e acessar a url capturada no passo anterior conforme exemplo da figura.
+
+    ![Visualizar ELB](/images/visualizar_aplicação.png)
+
+### Teste Balanceador de Carga
+
+01. Abra uma outra guia do navegador e acesse a url capturada no passo anterior porém incluindo **/phpinfo.php** na url conforme exemplo da figura.
+
+    ![Visualizar ELB](/images/visualizar_aplicação_balanceador.png)
+
+02. Atualize a página e observe se a informação da linha **System** é alterada conforme os dois exemplos abaixo.
+
+    ![Visualizar ELB](/images/visualizar_aplicação_balanceador_1.png)
+
+    ![Visualizar ELB](/images/visualizar_aplicação_balanceador_2.png)
+
+    > Toda vez que a página é carregada o balanceador de carga direciona a conexão para uma instância EC2 diferente.
+
+    > Parabéns !!! Se chegou até aqui você concluiu o objetivo proposto.
