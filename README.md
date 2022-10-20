@@ -36,12 +36,37 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     - Recursos a serem criados     : **VPC e muito mais**
     - Gerar automaticamente        : **efs**
+    - Bloco CIDR IPv4              : **10.0.0.0/16**
     - Número de sub-redes privadas : **0**
     - Endpoints da VPC             : **Nenhuma**<br/><br/>
 
 04. Clicar em **Criar VPC** e observar recursos criados conforme exemplo da figura.
 
     ![Criar VPC](/images/criar_vpc.png)<br/><br/>
+
+### Criar Security Group (Firewall)
+
+01. Em **Serviços** digite **VPC** e selecione o serviço.
+
+02. No menu lateral esquerdo clique em **Grupos de segurança**.
+
+03. Clique em **Criar grupo de segurança** e preencha com as informações abaixo.
+
+    - Nome do grupo de segurança : **efs-sg**
+    - Descrição                  : **EFS Security Group**
+    - VPC                        : **efs-vpc**<br/><br/>
+    - Clique em **Adicionar regra** para cada regra abaixo
+      - Regra
+        - Tipo   : **Todo o tráfego**
+        - Origem : **10.0.0.0/16**
+      - Regra
+        - Tipo   : **SSH**
+        - Origem : **0.0.0.0/0**
+      - Regra
+        - Tipo   : **HTTP**
+        - Origem : **0.0.0.0/0**<br/><br/>
+
+04. Clique em **Criar grupo de segurança**.<br/><br/>
 
 ### Criar sistema de arquivos EFS
 
@@ -60,7 +85,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 05. Clique em **Próximo**.
 
-06. Na tela **Acesso à rede** clique em **Próximo**.
+06. Na tela **Acesso à rede**, remova o grupo de segurança padrão, selecione o grupo de segurança **efs-sg** para cada Zona de disponibilidade e clique em **Próximo**.
 
 07. Na tela **Política do sistema de arquivos** clique em **Próximo**.
 
@@ -87,11 +112,8 @@ O objetivo é explorar na prática os conceitos deste serviço.
       - VPC                                 : **efs-vpc**
       - Sub-rede                            : **efs-subnet-public1-us-east-1a**
       - Atribuir IP público automaticamente : **Habilitar**
-      - Nome do grupo de segurança          : **efs-sg**
-      
-      - **Adicionar regra de grupo de segurança**
-        - Tipo : **HTTP**
-        - Tipo de origem: **Qualquer lugar**<br/><br/>
+      - **Selecionar grupo de segurança existente**
+        - Grupos de segurança comuns : **efs-sg**<br/><br/>
 
     - **Detalhes avançados**
       - Dados do usuário<br/><br/>
@@ -101,28 +123,28 @@ O objetivo é explorar na prática os conceitos deste serviço.
         yum update -y
         amazon-linux-extras install -y php7.2 epel
         yum install -y amazon-efs-utils httpd telnet tree git
-        wget https://bootstrap.pypa.io/get-pip.py -O /tmp/get-pip.py
-        /usr/bin/python3 /tmp/get-pip.py
-        /usr/local/bin/pip3 install botocore
         mkdir /mnt/efs
-        echo "$EFS-ID:/ /mnt/efs efs _netdev,noresvport,tls 0 0" >> /etc/fstab
-        x=9
+        echo "${efs_id}:/ /mnt/efs efs _netdev,noresvport,tls 0 0" >> /etc/fstab
+        x=10
         while (( $x > 0 )); do
           mount -fav
           mnt=`df -h |grep /mnt/efs |wc -l`
-          if (( $mnt >= 1 )); then break; fi
+          if (( $mnt >= 1 )); then
+            systemctl enable httpd
+            cd /tmp
+            git clone https://github.com/kledsonhugo/app-static-site-efs
+            mkdir /mnt/efs/html
+            cp /tmp/app-static-site-efs/app/*.html /mnt/efs/html
+            cp /tmp/app-static-site-efs/app/phpinfo.php /mnt/efs/html
+            rm -rf /var/www/html/
+            ln -s /mnt/efs/html/ /var/www/html
+            service httpd restart
+            break
+          fi
           echo $((x--))
-          sleep 10
+          echo "Unable to mount EFS. Attempt: $x"
+          sleep 5
         done
-        systemctl enable httpd
-        cd /tmp
-        git clone https://github.com/kledsonhugo/app-static-site-efs
-        mkdir /mnt/efs/html
-        cp /tmp/app-static-site-efs/app/*.html /mnt/efs/html
-        cp /tmp/app-static-site-efs/app/phpinfo.php /mnt/efs/html
-        rm -rf /var/www/html/
-        ln -s /mnt/efs/html/ /var/www/html
-        service httpd restart
         ```
 
     - **Resumo**
@@ -145,9 +167,8 @@ O objetivo é explorar na prática os conceitos deste serviço.
     - **Configurações de rede**
       - Sub-rede : **efs-subnet-public2-us-east-1b**
         > Pode ser que não seja **efs-subnet-public2-us-east-*1b***, dependendo de qual zona de disponibilidade a sub-rede foi criada. Porém nesse ponto não pode ser a mesma sub-rede usada para criar as primeiras 2 instâncias EC2. Veja a [Arquitetura de Referência](/images/visualizar_instancias.png) em caso de dúvidas.
-      
-      - **Selecionar grupo de segurança existente**
-        - Grupos de segurança comuns : **efs-sg**<br/><br/>
+  
+    <br/><br/>
 
 ### Criar Balanceador de Carga
 
