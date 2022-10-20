@@ -122,19 +122,6 @@ data "template_file" "user_data" {
   }
 }
 
-# resource "aws_instance" "instance" {
-#   count                  = 4
-#   ami                    = "ami-02e136e904f3da870"
-#   instance_type          = "t2.micro"
-#   key_name               = "vockey"
-#   subnet_id              = aws_subnet.sn.id
-#   vpc_security_group_ids = [aws_security_group.sg.id]
-#   user_data              = base64encode(data.template_file.user_data.rendered)
-#   depends_on = [
-#     aws_efs_mount_target.efs_target
-#   ]
-# }
-
 resource "aws_launch_template" "lt" {
   name                   = "ltemplate"
   image_id               = "ami-02e136e904f3da870"
