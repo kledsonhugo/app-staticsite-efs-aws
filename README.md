@@ -48,19 +48,27 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     > **Note**
 
-    > Valide cuidadosamente esse passo antes de prosseguir. Esse passo é pré-requisito para os demais passos desse procedimento. Em caso de dúvidas ou algo inesperado, não prossiga, busque apoio.
+    > Valide cuidadosamente esse passo antes de prosseguir.
+    
+    > Esse passo é pré-requisito para os demais passos desse procedimento.
+    
+    > Em caso de dúvidas ou algo inesperado, não prossiga, busque apoio.
 
-    - Devem ser criados:
+    - Devem ser criados os seguinte recursos:
       - 01 VPC
-      - 02 Sub-Redes
-      - 01 Gateway para a Internet
-      - 01 Tabela de Rotas padrão<br/><br/>
+      - 02 sub-redes
+      - 01 gateway para a Internet
+      - 01 tabela de rotas<br/><br/>
 
       ![Criar VPC](/images/criar_vpc.png)<br/><br/>
 
     > **Warning**
 
-    >W> Ignore a mensagem *Falha ao carregar grupos de regras* conforme figura abaixo, caso apareça. Essa mensagem é devido a ambientes de laboratório não possuirem permissão para visualizar regras do firewall de DNS. Essa mensagem não afeta os passos seguintes dessa atividade.
+    > Ignore a mensagem *Falha ao carregar grupos de regras* conforme figura abaixo, caso apareça.
+    
+    > Essa mensagem é devido a ambientes de laboratório não possuirem permissão para visualizar regras do firewall de DNS.
+    
+    > Essa mensagem não afeta os passos seguintes dessa atividade.
 
     ![Criar VPC](/images/criar_vpc_falha_ao_carregar_grupos.png)<br/><br/>
 
@@ -125,7 +133,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     > **Note**
     
-    > Capture o id do sistema de arquivos pois será utilizado adiante.
+    > Capture o id do sistema de arquivos EFS pois será utilizado adiante.
 
     ![Criar EFS](/images/criar_efs.png)<br/><br/>
 
@@ -140,7 +148,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
     - **Par de chaves (login)**
       - Nome do par de chaves : **vockey** (ou outra de sua preferência)<br/><br/>
 
-    - Clique em **Editar** em **Configurações de rede**
+    - Em **Configurações de rede** clique **Editar**
       - VPC                                 : **efs-vpc**
       - Sub-rede                            : **efs-subnet-public1-us-east-1a**
       - Atribuir IP público automaticamente : **Habilitar**
@@ -181,7 +189,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
         > **Note**
 
-        > Substitua no código acima **${efs-id}** pelo id do sistema de arquivos capturado anteriormente, conforme figuras abaixo.
+        > Substitua no código acima **${efs-id}** pelo id do sistema de arquivos EFS capturado anteriormente, conforme figuras abaixo.
 
         > **Antes**
         ![Criar EFS](/images/criar_ec2_userdata_before.png)<br/><br/>
@@ -198,7 +206,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 04. Clique em **Visualizar todas as instâncias**.
 
-05. Aguarde até que as instâncias fiquem com o status **2/2 verificações aprovadas** conforme exemplo da figura.
+05. Aguarde até que as instâncias fiquem com status **2/2 verificações aprovadas** conforme exemplo da figura.
 
     > **Note**
 
@@ -208,7 +216,9 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     > **Note**
 
-    > Valide cuidadosamente esse passo antes de prosseguir. Esse passo é pré-requisito para os demais passos desse procedimento. Em caso de dúvidas ou algo inesperado, não prossiga e busque apoio.
+    > Valide cuidadosamente esse passo antes de prosseguir. Esse passo é pré-requisito para os demais passos desse procedimento.
+    
+    > Em caso de dúvidas ou algo inesperado, não prossiga e busque apoio.
 
     <br/><br/>
     
@@ -223,9 +233,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
         
         > Pode ser que a sub-rede não seja **efs-subnet-public2-us-east-*1b***, dependendo de qual Zona de disponibilidade a sub-rede foi criada. Porém nesse ponto não pode ser a mesma sub-rede usada para criar as primeiras 2 instâncias EC2.
         
-        > Veja a [Arquitetura de Referência](/images/visualizar_instancias.png).
-        
-        > Em caso de dúvidas busque por apoio.
+        > Em caso de dúvidas, reveja a [Arquitetura de Referência](/images/visualizar_instancias.png) ou busque por apoio.
     
     <br/><br/>
 
@@ -247,7 +255,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     ![Visualizar instâncias target](/images/visualizar_instancias_target.png)
 
-06. Validar se as 4 instâncias foram movidas para a área **Examinar destinos** conforme exemplo da figura.
+06. Validar que as 4 instâncias foram movidas para **Examinar destinos** conforme exemplo da figura.
 
     ![Visualizar instâncias target 2](/images/visualizar_instancias_target2.png)
 
@@ -273,7 +281,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
       
       > **Note**
 
-      > Desmarque qualquer outro Grupo de Segurança que por ventura já estava selecionado por padrão.
+      > Desmarque qualquer outro Grupo de Segurança selecionado por padrão.
 
     - Ação padrão : Avançar para **efs-elb-target-group**<br/><br/>
 
@@ -291,6 +299,10 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 14. Capturar a url do campo **Nome do DNS**.
 
+    > **Note**
+    
+    > Essa url será utilizada adiante.
+
 15. No menu lateral esquerdo clique em **Grupos de destino**.
 
 16. Clicar sobre o **Grupo de destino** previamente criado **efs-elb-target-group**.
@@ -301,7 +313,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     > Valide cuidadosamente esse passo antes de prosseguir.
     
-    > Esse passo é pré-requisito para os demais passos desse procedimento.
+    > Esse passo é pré-requisito para os testes desse procedimento.
     
     > Em caso de dúvidas ou algo inesperado, não prossiga, busque apoio.
 
@@ -319,7 +331,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     ![Visualizar ELB](/images/visualizar_aplicação_balanceador.png)
 
-02. Atualize a página e observe se a informação da linha **System** é alterada conforme os exemplos abaixo.
+02. Atualize a página diversas vezes e observe se a informação da linha **System** é alterada conforme os exemplos abaixo.
 
     ![Visualizar ELB](/images/visualizar_aplicação_balanceador_1.png)
 
@@ -327,13 +339,9 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     > **Note**
 
-    > Toda vez que a página é carregada, o balanceador de carga direciona a conexão para uma das 4 instâncias.
+    > Toda vez que a página é carregada, o balanceador de carga redireciona a conexão para uma das instâncias íntegras no balanceador.
     
-    > Atualize o browser algumas vezes, até que o IP das 4 instâncias EC2 apareça.
-    
-    > **Warning**
-    
-    > Se não aparecerem 4 IP´s diferentes, não existem 4 instâncias EC2 íntegras no balanceador de carga.
+    > O esperado é que o IP das 4 instâncias EC2 apareça.
 
 <br/><br/>
 ## Parabéns
