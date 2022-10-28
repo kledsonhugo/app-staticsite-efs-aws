@@ -366,6 +366,4 @@ O objetivo dessa atividade é explorar na prática os conceitos deste serviço E
 
 Se chegou até aqui você concluiu com sucesso o objetivo dessa atividade
 
-**Parabéns !!!**
-
 Não esqueça de desproisionar todos recursos criados nessa atividade, para evitar gastos desnecessários.
