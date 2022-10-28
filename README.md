@@ -12,6 +12,8 @@ Com o Amazon EFS, você paga apenas pelo armazenamento usado pelo sistema de arq
 
 O objetivo é explorar na prática os conceitos deste serviço.
 
+  > **Note**
+
   > A execução requer conhecimento prévio sobre a infraestrutura global da AWS (Regiões e Zonas de Disponibilidade), além de caracteríticas básicas dos serviços AWS Virtual Private Cloud (VPC) e AWS Elastic Compute Cloud (EC2).
 
   > As opções utilizadas consideram ambiente exclusivamente para experimentação. Ambientes corporativos produtivos devem levar em consideração outros aspectos não contemplados, como segurança, capacidade, alta disponibilidade e *observability*.
@@ -42,10 +44,11 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 04. Clicar em **Criar VPC**.
 
-05. Observar atentamente se os recursos foram criados conforme o exemplo da figura.
+05. Observar se os recursos associados à VPC foram criados conforme o exemplo da figura.
 
-    > **Warning**:
-    > Valide cuidadosamente esse passo antes de prosseguir. Esse passo é pré-requisito para os demais passos desse procedimento.
+    > **Important**
+
+    > Valide cuidadosamente esse passo antes de prosseguir. Esse passo é pré-requisito para os demais passos desse procedimento. Em caso de dúvidas ou algo inesperado, não prossiga, busque apoio.
 
     - Devem ser criados:
       - 01 VPC
@@ -53,7 +56,13 @@ O objetivo é explorar na prática os conceitos deste serviço.
       - 01 Gateway para a Internet
       - 01 Tabela de Rotas padrão<br/><br/>
 
-    ![Criar VPC](/images/criar_vpc.png)<br/><br/>
+      ![Criar VPC](/images/criar_vpc.png)<br/><br/>
+
+    > **Warning**
+
+    > Ignore a mensagem *Falha ao carregar grupos de regras* conforme figura abaixo, caso apareça. Essa mensagem é devido a ambientes de laboratório não possuirem permissão para visualizar regras do firewall de DNS. Essa mensagem não afeta os passos seguintes dessa atividade.
+
+    ![Criar VPC](/images/criar_vpc_falha_ao_carregar_grupos.png)<br/><br/>
 
 ### Criar Security Group (Firewall)
 
@@ -66,7 +75,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
     - Nome do grupo de segurança : **efs-sg**
     - Descrição                  : **EFS Security Group**
     - VPC                        : **efs-vpc**<br/><br/>
-    - Clique em **Adicionar regra** para cada regra abaixo
+    - Em **Regras de entrada** clique em **Adicionar regra** para cada regra abaixo
       - Regra
         - Tipo   : **Todo o tráfego**
         - Origem : **10.0.0.0/16**
@@ -94,9 +103,19 @@ O objetivo é explorar na prática os conceitos deste serviço.
     - Transição para IA                           : **Nenhum**
     - Habilite a criptografia de dados em repouso : Desmarcar<br/><br/>
 
-05. Clique em **Próximo**.
+04. Clique em **Próximo**.
 
-06. Na tela **Acesso à rede**, remova o grupo de segurança padrão, selecione o grupo de segurança **efs-sg** para cada Zona de disponibilidade e clique em **Próximo**.
+05. Na tela **Acesso à rede**, para cada uma das duas Zonas de disponibilidade, remova o grupo de segurança padrão e selecione o grupo de segurança **efs-sg** .
+
+    > **Important**
+
+    > As subnets criadas anteriormente devem ser preenchidas automaticamente no campo *ID da sub-rede*.
+    
+    > A sub-rede *efs-subnet-public1-us-east-1x* para uma Zona de disponibilidade e a sub-rede *efs-subnet-public2-us-east-1x* para a outra Zona de disponibilidade.
+    
+    > Caso não estejam, selecione manualmente.
+
+06. Clique em **Próximo**.
 
 07. Na tela **Política do sistema de arquivos** clique em **Próximo**.
 
@@ -104,6 +123,8 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 09. Após a criação deverá aparecer a mensagem **Êxito! O sistema de arquivos com id fs-*xxxxxxxx* está disponível** conforme exemplo da figura.
 
+    > **Important**
+    
     > Capture o id do sistema de arquivos pois será utilizado adiante.
 
     ![Criar EFS](/images/criar_efs.png)<br/><br/>
@@ -117,9 +138,9 @@ O objetivo é explorar na prática os conceitos deste serviço.
     - Nome : **efs-public1**
 
     - **Par de chaves (login)**
-      - Nome do par de chaves : **vockey** (ou outra de sua preferência)
+      - Nome do par de chaves : **vockey** (ou outra de sua preferência)<br/><br/>
 
-    - **Configurações de rede**
+    - Clique em **Editar** em **Configurações de rede**
       - VPC                                 : **efs-vpc**
       - Sub-rede                            : **efs-subnet-public1-us-east-1a**
       - Atribuir IP público automaticamente : **Habilitar**
@@ -127,8 +148,8 @@ O objetivo é explorar na prática os conceitos deste serviço.
         - Grupos de segurança comuns : **efs-sg**<br/><br/>
 
     - **Detalhes avançados**
-      - Dados do usuário<br/><br/>
-        > Substitua no código abaixo **$EFS-ID** pelo id do sistema de arquivos capturado anteriormente.
+      - Dados do usuário
+
         ```
         #!/bin/bash
         yum update -y
@@ -158,6 +179,18 @@ O objetivo é explorar na prática os conceitos deste serviço.
         done
         ```
 
+        > **Important**
+
+        > Substitua no código acima **${efs-id}** pelo id do sistema de arquivos capturado anteriormente, conforme figuras abaixo.
+
+        > **Antes**
+        ![Criar EFS](/images/criar_ec2_userdata_before.png)<br/><br/>
+
+        > **Depois**
+        
+        > EFS id *fs-0e1404bfc151ce59b* usado apenas como exemplo. Substitua pelo id do EFS criado previamente nessa atividade.
+        ![Criar EFS](/images/criar_ec2_userdata_after.png)<br/><br/>
+
     - **Resumo**
       - Número de instâncias : **2**<br/><br/>
 
@@ -167,19 +200,35 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 05. Aguarde até que as instâncias fiquem com o status **2/2 verificações aprovadas** conforme exemplo da figura.
 
-    > Clique no botão **Refresh** para atualizar o status
+    > **Note**
 
-    ![Visualizar Instancias](/images/visualizar_instancias.png)
+    > Clique no botão **Refresh** para atualizar o status da página.
+
+    ![Visualizar Instancias](/images/visualizar_instancias.png)<br/><br/>
+
+    > **Important**
+
+    > Valide cuidadosamente esse passo antes de prosseguir. Esse passo é pré-requisito para os demais passos desse procedimento. Em caso de dúvidas ou algo inesperado, não prossiga e busque apoio.
+
+    <br/><br/>
     
-06. Repita os passos 01-05 apenas alterando com as informações abaixo.
+06. Repita os passos 01 ao 05 acima apenas alterando com as informações abaixo.
 
     - Nome : **efs-public2**
 
     - **Configurações de rede**
       - Sub-rede : **efs-subnet-public2-us-east-1b**
-        > Pode ser que não seja **efs-subnet-public2-us-east-*1b***, dependendo de qual zona de disponibilidade a sub-rede foi criada. Porém nesse ponto não pode ser a mesma sub-rede usada para criar as primeiras 2 instâncias EC2. Veja a [Arquitetura de Referência](/images/visualizar_instancias.png) em caso de dúvidas.
-  
+
+        > **Important**
+        
+        > Pode ser que a sub-rede não seja **efs-subnet-public2-us-east-*1b***, dependendo de qual Zona de disponibilidade a sub-rede foi criada. Porém nesse ponto não pode ser a mesma sub-rede usada para criar as primeiras 2 instâncias EC2.
+        
+        > Veja a [Arquitetura de Referência](/images/visualizar_instancias.png).
+        
+        > Em caso de dúvidas busque por apoio.
+    
     <br/><br/>
+
 
 ### Criar Balanceador de Carga
 
@@ -194,56 +243,98 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 04. Clique em **Próximo**.
 
-05. Selecione todas as instâncias iniciando com **efs-publc** e clique em **Incluir como pendente abaixo** conforme exemplo da figura.
+05. Selecione as 4 instâncias criadas anteriormente, que iniciam com **efs-publc**, e clique em **Incluir como pendente abaixo** conforme exemplo da figura.
 
     ![Visualizar instâncias target](/images/visualizar_instancias_target.png)
 
+06. Validar se as 4 instâncias foram movidas para a área **Examinar destinos** conforme exemplo da figura.
+
     ![Visualizar instâncias target 2](/images/visualizar_instancias_target2.png)
 
-06. Clique em **Criar grupo de destino**.
+07. Clique em **Criar grupo de destino**.
 
-07. No menu lateral esquerdo clique em **Load Balancers**.
+08. No menu lateral esquerdo clique em **Load Balancers**.
 
-08. Clique em **Criar Load Balancer**.
+09. Clique em **Criar Load Balancer**.
 
-09. Clique em **Criar** para a opção **Application Load Balancer** e preencha com as informações abaixo.
+10. Clique em **Criar** para a opção **Application Load Balancer** e preencha com as informações abaixo.
 
     - Nome        : **efs-elb**
     - VPC         : **efs-vpc**
     - Mapeamentos : **us-east-1a** e **us-east-1b**
-      > A segunda Zona de Disponibilidade pode não ser **us-east-1b**, dependendo de qual Zona de Disponibilidade as sub-redes foram criadas.
+      
+      > **Important**
+
+      > A segunda Zona de disponibilidade pode não ser **us-east-1b**, dependendo de qual Zona de disponibilidade as sub-redes foram criadas. Selecione as Zonas de disponibilidade usadas para criar as instâncias EC2.
+      
+      > Em caso de dúvidas busque por apoio.
+
     - Grupos de segurança : **efs-sg**
-      > Desmarque qualquer outro Grupo de Segurança
+      
+      > **Important**
+
+      > Desmarque qualquer outro Grupo de Segurança que por ventura já estava selecionado por padrão.
+
     - Ação padrão : Avançar para **efs-elb-target-group**<br/><br/>
 
-10. Clique em **Criar Load Balancer**.
+11. Clique em **Criar Load Balancer**.
 
-11. Clique em **Ver balanceador de carga**.
+12. Clique em **Ver balanceador de carga**.
 
-12. Aguarde até que o balanceador de carga fique com o estado **Ativo** conforme exemplo da figura.
+13. Aguarde até que o balanceador de carga fique com o estado **Ativo** conforme exemplo da figura.
 
+    > **Note**
+    
     > Clique no botão **Refresh** para atualizar o estado
 
     ![Visualizar ELB](/images/visualizar_elb.png)
 
-13. Capturar a url do campo **Nome do DNS**.
+14. Capturar a url do campo **Nome do DNS**.
 
-14. Abrir uma outra guia do navegador e acessar a url capturada no passo anterior conforme exemplo da figura.
+15. No menu lateral esquerdo clique em **Grupos de destino**.
+
+16. Clicar sobre o **Grupo de destino** previamente criado **efs-elb-target-group**.
+
+17. Valide se o Balanceador de Carga possui 4 instâncias com status **Íntegro**, conforme exemplo da figura.
+
+    > **Important**
+
+    > Valide cuidadosamente esse passo antes de prosseguir.
+    
+    > Esse passo é pré-requisito para os demais passos desse procedimento.
+    
+    > Em caso de dúvidas ou algo inesperado, não prossiga, busque apoio.
+
+    ![Visualizar ELB](/images/visualizar_grupo_destino.png)
+
+### Testar aplicação HTML
+
+01. Abrir uma outra guia do navegador e acessar a url do Balanceador de Carga capturada previamente, conforme exemplo da figura.
 
     ![Visualizar ELB](/images/visualizar_aplicação.png)
 
 ### Testar Balanceador de Carga
 
-01. Abra uma outra guia do navegador e acesse a url capturada no passo anterior porém incluindo **/phpinfo.php** na url conforme exemplo da figura.
+01. Na mesma guia do navegador, inclua **/phpinfo.php** no fim da url, conforme exemplo da figura.
 
     ![Visualizar ELB](/images/visualizar_aplicação_balanceador.png)
 
-02. Atualize a página e observe se a informação da linha **System** é alterada conforme os dois exemplos abaixo.
+02. Atualize a página e observe se a informação da linha **System** é alterada conforme os exemplos abaixo.
 
     ![Visualizar ELB](/images/visualizar_aplicação_balanceador_1.png)
 
     ![Visualizar ELB](/images/visualizar_aplicação_balanceador_2.png)
 
-    > Toda vez que a página é carregada o balanceador de carga direciona a conexão para uma instância EC2 diferente.
+    > **Important**
 
-    > Parabéns !!! Se chegou até aqui você concluiu o objetivo proposto.
+    > Toda vez que a página é carregada, o balanceador de carga direciona a conexão para uma das 4 instâncias.
+    
+    > Atualize o browser algumas vezes, até que o IP das 4 instâncias EC2 apareça.
+    
+    > **Warning**
+    
+    > Se não aparecer 4 IP´s diferentes, significa que não existem 4 instâncias EC2 íntegras no balanceador de carga.
+
+## Parabéns
+
+Se chegou até aqui você concluiu com sucesso o objetivo proposto dessa atividade. Parabéns !!!
