@@ -117,7 +117,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     > **Note**
 
-    > As subnets criadas anteriormente devem ser preenchidas automaticamente no campo *ID da sub-rede*.
+    > As sub-redes criadas anteriormente devem ser preenchidas automaticamente no campo *ID da sub-rede*.
     
     > A sub-rede *efs-subnet-public1-us-east-1x* para uma Zona de disponibilidade e a sub-rede *efs-subnet-public2-us-east-1x* para a outra Zona de disponibilidade.
     
@@ -192,11 +192,15 @@ O objetivo é explorar na prática os conceitos deste serviço.
         > Substitua no código acima **${efs-id}** pelo id do sistema de arquivos EFS capturado anteriormente, conforme figuras abaixo.
 
         > **Antes**
+
         ![Criar EFS](/images/criar_ec2_userdata_before.png)<br/><br/>
 
         > **Depois**
         
-        > EFS id *fs-0e1404bfc151ce59b* usado apenas como exemplo. Substitua pelo id do EFS criado previamente nessa atividade.
+        > EFS id *fs-0e1404bfc151ce59b* usado apenas como exemplo.
+        
+        > Substitua pelo id do EFS criado previamente nessa atividade.
+
         ![Criar EFS](/images/criar_ec2_userdata_after.png)<br/><br/>
 
     - **Resumo**
@@ -216,7 +220,9 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     > **Note**
 
-    > Valide cuidadosamente esse passo antes de prosseguir. Esse passo é pré-requisito para os demais passos desse procedimento.
+    > Valide cuidadosamente esse passo antes de prosseguir.
+    
+    > Esse passo é pré-requisito para os demais passos desse procedimento.
     
     > Em caso de dúvidas ou algo inesperado, não prossiga e busque apoio.
 
@@ -257,6 +263,14 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 06. Validar que as 4 instâncias foram movidas para **Examinar destinos** conforme exemplo da figura.
 
+    > **Note**
+
+    > Valide cuidadosamente esse passo antes de prosseguir.
+    
+    > Esse passo é pré-requisito para os demais passos desse procedimento.
+    
+    > Em caso de dúvidas ou algo inesperado, não prossiga e busque apoio.
+
     ![Visualizar instâncias target 2](/images/visualizar_instancias_target2.png)
 
 07. Clique em **Criar grupo de destino**.
@@ -275,7 +289,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
       > A segunda Zona de disponibilidade pode não ser **us-east-1b**, dependendo de qual Zona de disponibilidade as sub-redes foram criadas. Selecione as Zonas de disponibilidade usadas para criar as instâncias EC2.
       
-      > Em caso de dúvidas busque por apoio.
+      > Em caso de dúvidas busque apoio.
 
     - Grupos de segurança : **efs-sg**
       
@@ -301,7 +315,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     > **Note**
     
-    > Essa url será utilizada adiante.
+    > A url será utilizada adiante.
 
 15. No menu lateral esquerdo clique em **Grupos de destino**.
 
@@ -322,6 +336,10 @@ O objetivo é explorar na prática os conceitos deste serviço.
 ### Testar aplicação HTML
 
 01. Abrir uma outra guia do navegador e acessar a url do Balanceador de Carga capturada previamente, conforme exemplo da figura.
+
+    > **Note**
+    
+    > Sucesso caso tenha carregado a página conforme a figura.
 
     ![Visualizar ELB](/images/visualizar_aplicação.png)
 
@@ -346,8 +364,8 @@ O objetivo é explorar na prática os conceitos deste serviço.
 <br/><br/>
 ## Parabéns
 
-Se chegou até aqui você concluiu com sucesso o objetivo proposto dessa atividade
+Se chegou até aqui você concluiu com sucesso o objetivo dessa atividade
 
-Parabéns !!!
+**Parabéns !!!**
 
 Não esqueça de desproisionar todos recursos criados nessa atividade, para evitar gastos desnecessários.
