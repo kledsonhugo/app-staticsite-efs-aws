@@ -1,6 +1,6 @@
 # WebApp hosted on AWS EFS
 
-Amazon Elastic File System (Amazon EFS) é um serviço que fornece um sistema de arquivos elástico simples e sem servidor.
+[Amazon Elastic File System](https://aws.amazon.com/efs/) (Amazon EFS) é um serviço que fornece um sistema de arquivos elástico simples e sem servidor.
 
 O serviço gerencia toda a infraestrutura de armazenamento de arquivos para você, evitando a complexidade de implantar, corrigir e manter configurações complexas de sistemas de arquivos.
 
@@ -10,11 +10,11 @@ Várias instâncias de computação em nuvem, incluindo Amazon EC2, Amazon ECS e
 
 Com o Amazon EFS, você paga apenas pelo armazenamento usado pelo sistema de arquivos e não há taxa mínima nem custo de configuração.
 
-O objetivo dessa atividade é explorar na prática os conceitos deste serviço.
+O objetivo dessa atividade é explorar na prática os conceitos deste serviço EFS.
 
   > **Note**
 
-  > A execução requer conhecimento prévio sobre a infraestrutura global da AWS (Regiões e Zonas de Disponibilidade), além de caracteríticas básicas dos serviços AWS Virtual Private Cloud (VPC) e AWS Elastic Compute Cloud (EC2).
+  > A execução requer conhecimento prévio sobre a infraestrutura global da AWS ([Regiões e Zonas de Disponibilidade](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/)), além de caracteríticas básicas dos serviços [AWS Virtual Private Cloud](https://aws.amazon.com/vpc/) (VPC) e [AWS Elastic Compute Cloud](https://aws.amazon.com/ec2/) (EC2).
 
   > As opções utilizadas consideram ambiente exclusivamente para experimentação. Ambientes corporativos produtivos devem levar em consideração outros aspectos não contemplados, como segurança, capacidade, alta disponibilidade e *observability*.
 
