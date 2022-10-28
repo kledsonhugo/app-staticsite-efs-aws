@@ -10,7 +10,7 @@ Várias instâncias de computação em nuvem, incluindo Amazon EC2, Amazon ECS e
 
 Com o Amazon EFS, você paga apenas pelo armazenamento usado pelo sistema de arquivos e não há taxa mínima nem custo de configuração.
 
-O objetivo é explorar na prática os conceitos deste serviço.
+O objetivo dessa atividade é explorar na prática os conceitos deste serviço.
 
   > **Note**
 
