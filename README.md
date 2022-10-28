@@ -44,7 +44,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 05. Observar atentamente se os recursos foram criados conforme o exemplo da figura.
 
-    > **Note**
+    > **Warning**:
     > Valide cuidadosamente esse passo antes de prosseguir. Esse passo é pré-requisito para os demais passos desse procedimento.
 
     - Devem ser criados:
