@@ -40,7 +40,18 @@ O objetivo é explorar na prática os conceitos deste serviço.
     - Número de sub-redes privadas : **0**
     - Endpoints da VPC             : **Nenhuma**<br/><br/>
 
-04. Clicar em **Criar VPC** e observar recursos criados conforme exemplo da figura.
+04. Clicar em **Criar VPC**.
+
+05. Observar atentamente se os recursos foram criados conforme o exemplo da figura.
+
+    > **Note**
+    > Valide cuidadosamente esse passo antes de prosseguir. Esse passo é pré-requisito para os demais passos desse procedimento.
+
+    - Devem ser criados:
+      - 01 VPC
+      - 02 Sub-Redes
+      - 01 Gateway para a Internet
+      - 01 Tabela de Rotas padrão<br/><br/>
 
     ![Criar VPC](/images/criar_vpc.png)<br/><br/>
 
