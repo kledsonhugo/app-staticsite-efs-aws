@@ -12,7 +12,7 @@ Com o Amazon EFS, você paga apenas pelo armazenamento usado pelo sistema de arq
 
 O objetivo dessa atividade é explorar na prática os conceitos deste serviço EFS.
 
-Tempo aproximado para realização da atividade: 3hs
+Tempo aproximado para realização da atividade: 3hs<br/><br/>
 
   > **Note**
 
