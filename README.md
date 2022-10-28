@@ -46,7 +46,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 05. Observar se os recursos associados à VPC foram criados conforme o exemplo da figura.
 
-    > **Important**
+    > **Note**
 
     > Valide cuidadosamente esse passo antes de prosseguir. Esse passo é pré-requisito para os demais passos desse procedimento. Em caso de dúvidas ou algo inesperado, não prossiga, busque apoio.
 
@@ -60,7 +60,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     > **Warning**
 
-    > Ignore a mensagem *Falha ao carregar grupos de regras* conforme figura abaixo, caso apareça. Essa mensagem é devido a ambientes de laboratório não possuirem permissão para visualizar regras do firewall de DNS. Essa mensagem não afeta os passos seguintes dessa atividade.
+    >W> Ignore a mensagem *Falha ao carregar grupos de regras* conforme figura abaixo, caso apareça. Essa mensagem é devido a ambientes de laboratório não possuirem permissão para visualizar regras do firewall de DNS. Essa mensagem não afeta os passos seguintes dessa atividade.
 
     ![Criar VPC](/images/criar_vpc_falha_ao_carregar_grupos.png)<br/><br/>
 
@@ -107,7 +107,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 05. Na tela **Acesso à rede**, para cada uma das duas Zonas de disponibilidade, remova o grupo de segurança padrão e selecione o grupo de segurança **efs-sg** .
 
-    > **Important**
+    > **Note**
 
     > As subnets criadas anteriormente devem ser preenchidas automaticamente no campo *ID da sub-rede*.
     
@@ -123,7 +123,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 09. Após a criação deverá aparecer a mensagem **Êxito! O sistema de arquivos com id fs-*xxxxxxxx* está disponível** conforme exemplo da figura.
 
-    > **Important**
+    > **Note**
     
     > Capture o id do sistema de arquivos pois será utilizado adiante.
 
@@ -179,7 +179,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
         done
         ```
 
-        > **Important**
+        > **Note**
 
         > Substitua no código acima **${efs-id}** pelo id do sistema de arquivos capturado anteriormente, conforme figuras abaixo.
 
@@ -206,7 +206,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     ![Visualizar Instancias](/images/visualizar_instancias.png)<br/><br/>
 
-    > **Important**
+    > **Note**
 
     > Valide cuidadosamente esse passo antes de prosseguir. Esse passo é pré-requisito para os demais passos desse procedimento. Em caso de dúvidas ou algo inesperado, não prossiga e busque apoio.
 
@@ -219,7 +219,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
     - **Configurações de rede**
       - Sub-rede : **efs-subnet-public2-us-east-1b**
 
-        > **Important**
+        > **Note**
         
         > Pode ser que a sub-rede não seja **efs-subnet-public2-us-east-*1b***, dependendo de qual Zona de disponibilidade a sub-rede foi criada. Porém nesse ponto não pode ser a mesma sub-rede usada para criar as primeiras 2 instâncias EC2.
         
@@ -263,7 +263,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
     - VPC         : **efs-vpc**
     - Mapeamentos : **us-east-1a** e **us-east-1b**
       
-      > **Important**
+      > **Note**
 
       > A segunda Zona de disponibilidade pode não ser **us-east-1b**, dependendo de qual Zona de disponibilidade as sub-redes foram criadas. Selecione as Zonas de disponibilidade usadas para criar as instâncias EC2.
       
@@ -271,7 +271,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     - Grupos de segurança : **efs-sg**
       
-      > **Important**
+      > **Note**
 
       > Desmarque qualquer outro Grupo de Segurança que por ventura já estava selecionado por padrão.
 
@@ -297,7 +297,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
 17. Valide se o Balanceador de Carga possui 4 instâncias com status **Íntegro**, conforme exemplo da figura.
 
-    > **Important**
+    > **Note**
 
     > Valide cuidadosamente esse passo antes de prosseguir.
     
@@ -325,7 +325,7 @@ O objetivo é explorar na prática os conceitos deste serviço.
 
     ![Visualizar ELB](/images/visualizar_aplicação_balanceador_2.png)
 
-    > **Important**
+    > **Note**
 
     > Toda vez que a página é carregada, o balanceador de carga direciona a conexão para uma das 4 instâncias.
     
@@ -333,8 +333,13 @@ O objetivo é explorar na prática os conceitos deste serviço.
     
     > **Warning**
     
-    > Se não aparecer 4 IP´s diferentes, significa que não existem 4 instâncias EC2 íntegras no balanceador de carga.
+    > Se não aparecerem 4 IP´s diferentes, não existem 4 instâncias EC2 íntegras no balanceador de carga.
 
+<br/><br/>
 ## Parabéns
 
-Se chegou até aqui você concluiu com sucesso o objetivo proposto dessa atividade. Parabéns !!!
+Se chegou até aqui você concluiu com sucesso o objetivo proposto dessa atividade
+
+Parabéns !!!
+
+Não esqueça de desproisionar todos recursos criados nessa atividade, para evitar gastos desnecessários.
