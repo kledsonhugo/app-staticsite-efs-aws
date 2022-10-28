@@ -333,7 +333,7 @@ Tempo aproximado para realização da atividade: 3hs<br/><br/>
     
     > Em caso de dúvidas ou algo inesperado, não prossiga, busque apoio.
 
-    ![Visualizar ELB](/images/visualizar_grupo_destino.png)
+    ![Visualizar ELB](/images/visualizar_grupo_destino.png)<br/><br/>
 
 ### Testar aplicação HTML
 
@@ -343,7 +343,7 @@ Tempo aproximado para realização da atividade: 3hs<br/><br/>
     
     > Sucesso caso tenha carregado a página conforme a figura.
 
-    ![Visualizar ELB](/images/visualizar_aplicação.png)
+    ![Visualizar ELB](/images/visualizar_aplicação.png)<br/><br/>
 
 ### Testar Balanceador de Carga
 
