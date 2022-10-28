@@ -12,6 +12,8 @@ Com o Amazon EFS, você paga apenas pelo armazenamento usado pelo sistema de arq
 
 O objetivo dessa atividade é explorar na prática os conceitos deste serviço EFS.
 
+Tempo aproximado para realização da atividade: 3hs
+
   > **Note**
 
   > A execução requer conhecimento prévio sobre a infraestrutura global da AWS ([Regiões e Zonas de Disponibilidade](https://aws.amazon.com/about-aws/global-infrastructure/regions_az/)), além de caracteríticas básicas dos serviços [AWS Virtual Private Cloud](https://aws.amazon.com/vpc/) (VPC) e [AWS Elastic Compute Cloud](https://aws.amazon.com/ec2/) (EC2).
